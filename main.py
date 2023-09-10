@@ -22,7 +22,8 @@ class AutonomousWebScraper:
         response = requests.get(search_url)
         soup = BeautifulSoup(response.content, 'html.parser')
         search_results = soup.find_all('a')
-        urls = [result.get('href') for result in search_results if result.get('href').startswith('http')]
+        urls = [result.get('href') for result in search_results if result.get(
+            'href').startswith('http')]
         return urls
 
 
@@ -79,7 +80,8 @@ class TextSummarizer:
         self.summarizer = pipeline("summarization")
 
     def summarize_text(self, text):
-        summary = self.summarizer(text, max_length=100, min_length=30, do_sample=False)
+        summary = self.summarizer(
+            text, max_length=100, min_length=30, do_sample=False)
         return summary
 
 
@@ -93,11 +95,13 @@ class ContentAggregator:
     def categorize_articles(self, categories):
         categorized_articles = {}
         for category in categories:
-            categorized_articles[category] = [article for article in self.articles if article.category == category]
+            categorized_articles[category] = [
+                article for article in self.articles if article.category == category]
         return categorized_articles
 
     def rank_articles(self, rank_by):
-        ranked_articles = sorted(self.articles, key=lambda x: getattr(x, rank_by), reverse=True)
+        ranked_articles = sorted(
+            self.articles, key=lambda x: getattr(x, rank_by), reverse=True)
         return ranked_articles
 
     def __str__(self):
@@ -125,8 +129,10 @@ class AutoUpdater:
     def update_content(self, query):
         urls = self.web_scraper.search(query)
         for url in urls:
-            title, summary, publication_date, relevant_images = self.content_extractor.extract_content(url)
-            article = Article(title, summary, publication_date, relevant_images, query)
+            title, summary, publication_date, relevant_images = self.content_extractor.extract_content(
+                url)
+            article = Article(title, summary, publication_date,
+                              relevant_images, query)
             self.content_aggregator.add_article(article)
 
 
@@ -169,6 +175,7 @@ if __name__ == '__main__':
     web_scraper = AutonomousWebScraper(search_engine='google')
     content_extractor = WebContentExtractor()
     content_aggregator = ContentAggregator()
-    auto_updater = AutoUpdater(web_scraper, content_extractor, content_aggregator)
+    auto_updater = AutoUpdater(
+        web_scraper, content_extractor, content_aggregator)
     auto_updater.update_content('Python programming')
     print(content_aggregator)
